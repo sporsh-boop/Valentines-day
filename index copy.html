@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine?</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      overflow: hidden;
+      background-color: black; /* Black background for the intro screen */
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+    #intro {
+      font-size: 2.5rem;
+    }
+    #intro button {
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+    #intro button:hover {
+      background-color: #b71c1c; /* Darker red on hover */
+    }
+    /* Main card styling */
+    .card {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      animation: fadeIn 2s ease-in-out forwards;
+      opacity: 0; /* Initially hidden */
+      display: none; /* Hidden until "Yes" is clicked */
+    }
+    h1 {
+      color: #d32f2f; /* Romantic red */
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    p {
+      color: #555;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    button {
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #b71c1c; /* Darker red on hover */
+    }
+    /* Hide the video element */
+    #backgroundVideo {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      z-index: -1;
+    }
+    /* Countdown timer styling */
+    #countdown {
+      display: none; /* Hidden initially */
+      font-size: 3rem;
+      font-weight: bold;
+    }
+    #countdown p {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    /* Keyframes for animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Intro screen -->
+  <div id="intro">
+    <p>Are you ready?</p>
+    <button id="yesButtonIntro" onclick="showCard()">Yes</button>
+    <button id="noButtonIntro" onclick="growYesButton('yesButtonIntro')">No</button>
+  </div>
+
+  <!-- Valentine's card -->
+  <div class="card" id="valentineCard">
+    <h1>Will You Be My Valentine?</h1>
+    <p>Please</p>
+    <div class="buttons">
+      <button id="yesButtonCard" onclick="startCountdown()">Yes!</button>
+      <button id="noButtonCard" onclick="growYesButton('yesButtonCard'); tryAgainCard()"> No (why would you say no tho)? </button>
+    </div>
+  </div>
+
+  <!-- Countdown timer -->
+  <div id="countdown">
+    <p>See you on the 14th...</p>
+    <span id="timer">00:00:00:00</span>
+  </div>
+
+  <!-- Hidden video element for background audio -->
+  <video id="backgroundVideo" controls autoplay loop style="display: none;">
+    <source src="Spongebob - Jelly Fish Jam [4K_60FPS] 720.mp4" type="audio/mp4">
+    <source src="Spongebob - Jelly Fish Jam [4K_60FPS] 720.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
+  </video>
+
+  <script>
+    // Function to show the Valentine's card and play background audio
+    function showCard() {
+      document.getElementById('intro').style.display = 'none'; // Hide intro screen
+      document.getElementById('valentineCard').style.display = 'block'; // Show card
+      document.getElementById('valentineCard').style.opacity = '1'; // Fade in
+
+      // Play the hidden video (audio only)
+      const video = document.getElementById('backgroundVideo');
+      video.play();
+    }
+
+    // Function to grow the "Yes" button when "No" is clicked
+    function growYesButton(buttonId) {
+      const yesButton = document.getElementById(buttonId);
+      const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
+      yesButton.style.fontSize = `${currentSize * 1.2}px`; // Increase font size by 20%
+      yesButton.style.padding = `${currentSize * 0.8}px ${currentSize * 1.6}px`; // Adjust padding
+    }
+
+    // Function to handle "Maybe Next Time" button on the card
+    function tryAgainCard() {
+      document.querySelector('.card p').textContent = "PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE";
+    }
+
+    // Function to start the countdown timer
+    function startCountdown() {
+      // Hide the Valentine's card
+      document.getElementById('valentineCard').style.display = 'none';
+
+      // Show the countdown timer
+      const countdown = document.getElementById('countdown');
+      countdown.style.display = 'block';
+
+      // Set the target date and time (February 14, 2025, 12:00 AM New York time)
+      const targetDate = new Date('February 14, 2025 00:00:00 EST').getTime();
+
+      // Update the countdown every second
+      const timer = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        // Calculate days, hours, minutes, and seconds
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the countdown in Days:Hours:Minutes:Seconds format
+        document.getElementById('timer').innerHTML = 
+          `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        // If the countdown is over, display a message
+        if (distance < 0) {
+          clearInterval(timer);
+          document.getElementById('timer').innerHTML = "It's Valentine's Day! ❤️";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
